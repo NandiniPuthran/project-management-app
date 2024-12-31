@@ -1,0 +1,34 @@
+version: "3.7"
+services:
+  mariadb:
+    image: mariadb:10.5
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+    volumes:
+      - mariadb-data:/var/lib/mysql
+
+  redis-cache:
+    image: redis:6.2
+    command: redis-server --save 60 1 --loglevel warning
+
+  redis-queue:
+    image: redis:6.2
+    command: redis-server --save 60 1 --loglevel warning
+
+  redis-socketio:
+    image: redis:6.2
+    command: redis-server --save 60 1 --loglevel warning
+
+  backend:
+    image: frappe/bench:13
+    volumes:
+      - ./custom_app:/home/frappe/frappe-bench/apps/custom_app
+    environment:
+      DB_HOST: mariadb
+      REDIS_CACHE: redis-cache
+      REDIS_QUEUE: redis-queue
+      REDIS_SOCKETIO: redis-socketio
+    command: bench start
+
+volumes:
+  mariadb-data:

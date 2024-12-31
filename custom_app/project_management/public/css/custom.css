@@ -1,0 +1,8 @@
+.project-task-list .text-muted.end_date:after {
+    content: ' (Overdue)';
+    color: red;
+}
+
+.project-task-list .end_date.past-due {
+    color: red !important;
+}
